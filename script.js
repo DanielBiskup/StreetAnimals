@@ -96,24 +96,34 @@ class Character {
       characterActions[
         Math.floor(Math.random() * characterActions.length)
       ];
-    if (this.action === 'up') {
-      this.frameY = 0;
-      this.minFrame = 4;
-      this.maxFrame = 15;
-    } else if (this.action === 'right') {
-      this.frameY = 3;
-      this.minFrame = 3;
-      this.maxFrame = 13;
-    } else if (this.action === 'jump') {
-      this.frameY = 7;
-      this.minFrame = 0;
-      this.maxFrame = 9;
-    } else if (this.action === 'down right') {
-      this.frameY = 4;
-      this.minFrame = 4;
-      this.maxFrame = 15;
-    }
+
+    let animationFrames = {
+      up: {
+        frameY: 0,
+        minFrame: 4,
+        maxFrame: 15,
+      },
+      right: {
+        frameY: 3,
+        minFrame: 3,
+        maxFrame: 13,
+      },
+      jump: {
+        frameY: 7,
+        minFrame: 0,
+        maxFrame: 9,
+      },
+      'down right': {
+        frameY: 4,
+        minFrame: 4,
+        maxFrame: 15,
+      },
+    };
+
+    [this.frameY, this.minFrame, this.maxFrame] =
+      Object.values(animationFrames[this.action]);
   }
+
   draw() {
     drawSprite(
       images.player,
