@@ -37,7 +37,18 @@ window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
 });
 
+let secondsPassed;
+let oldTimeStamp;
+let fps;
+
 function gameLoop(timeStamp) {
+  // calculate time delta
+  secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+  oldTimeStamp = timeStamp;
+
+  // calculate and draw FPS
+  fps = Math.round(1 / secondsPassed);
+
   draw();
   window.requestAnimationFrame(gameLoop);
 }
@@ -132,10 +143,16 @@ function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
+function drawFPS(fps) {
+  ctx.font = '25px Arial';
+  ctx.fillStyle = 'greenyellow';
+  ctx.fillText('FPS: ' + fps, 10, 30);
+}
 function draw() {
   drawBackground();
   for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
   }
+  drawFPS(fps);
 }
