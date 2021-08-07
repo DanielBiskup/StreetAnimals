@@ -6,16 +6,6 @@ body {
   height: 100%;
   overflow: hidden;
 }
-
-.floor {
-  position: absolute;
-  width: 500%;
-  height: 500%;
-  top: -200%;
-  left: -200%;
-  background: url('./assets/stone-floor/StoneFloorTexture_1.png');
-  transform: rotate3d(1, 0, 1, 50deg);
-}
 canvas {
   position: absolute;
   top: 0;

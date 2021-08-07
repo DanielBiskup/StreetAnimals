@@ -3,15 +3,15 @@ const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+// load background image
+backgroundImg = new Image();
+backgroundImg.src =
+  './assets/stone-floor/StoneFloorTexture_1.png';
+
 // load images
 const images = {};
 images.player = new Image();
-const characterActions = [
-  'up',
-  'right',
-  'jump',
-  'down right',
-];
+const characterActions = ['up', 'right', 'down right'];
 const numberOfCharacters = 10;
 const characters = [];
 
@@ -100,9 +100,17 @@ images.player.src = './non-free-assets/cuphead.png';
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
   ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
+function drawBackground() {
+  backgroundPattern = ctx.createPattern(
+    backgroundImg,
+    'repeat'
+  );
+  ctx.fillStyle = backgroundPattern;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
   for (i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
