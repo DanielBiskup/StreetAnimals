@@ -39,9 +39,40 @@ window.addEventListener('resize', () => {
 
 let secondsPassed;
 let oldTimeStamp = 0.0;
-let fps;
-let fpsRenderBuffer = 0;
-let timeSinceLastFpsUpdate = 0.1;
+
+class FpsCounter {
+  constructor() {
+    this.fps;
+    this.fpsRenderBuffer = 0;
+    this.timeSinceLastFpsUpdate = 0.1;
+  }
+  update(dtsec) {
+    this.fps = Math.round((1 / dtsec) * 100) / 100;
+    this.timeSinceLastFpsUpdate += dtsec;
+    if (this.timeSinceLastFpsUpdate > 0.5) {
+      this.fpsRenderBuffer = this.fps;
+      this.timeSinceLastFpsUpdate = 0.0;
+    }
+  }
+  draw(ctx) {
+    /** In chrome requestAnimationFrame's callback doesn't
+     *  get called faster than 60Hz. That's the FPS are
+     *  a stable 60FPS.
+     */
+    function financial(x) {
+      return Number.parseFloat(x).toFixed(2);
+    }
+    ctx.font = '25px Arial';
+    ctx.fillStyle = 'greenyellow';
+    ctx.fillText(
+      'FPS: ' + financial(this.fpsRenderBuffer),
+      10,
+      30
+    );
+  }
+}
+
+let fpsCounter = new FpsCounter(ctx);
 
 function gameLoop(timeStamp) {
   // calculate time delta
@@ -49,16 +80,7 @@ function gameLoop(timeStamp) {
   secondsPassed = millisecondsPassed / 1000;
   oldTimeStamp = timeStamp;
 
-  // calculate and draw FPS
-  fps = Math.round((1 / secondsPassed) * 100) / 100;
-  console.log(timeSinceLastFpsUpdate + secondsPassed);
-  timeSinceLastFpsUpdate += secondsPassed;
-  if (timeSinceLastFpsUpdate > 0.5) {
-    fpsRenderBuffer = fps;
-    timeSinceLastFpsUpdate = 0.0;
-  }
-
-  draw();
+  mainUpdate(secondsPassed, ctx);
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -152,24 +174,21 @@ function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function drawFPS(fps) {
-  /** In chrome requestAnimationFrame's callback doesn't
-   *  get called faster than 60Hz. That's the FPS are
-   *  a stable 60FPS.
-   */
-  function financial(x) {
-    return Number.parseFloat(x).toFixed(2);
-  }
-  ctx.font = '25px Arial';
-  ctx.fillStyle = 'greenyellow';
-  ctx.fillText('FPS: ' + financial(fps), 10, 30);
-}
-
-function draw() {
-  drawBackground();
+function drawCharacters() {
   for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
   }
-  drawFPS(fpsRenderBuffer);
+}
+
+function mainUpdate(dtsec, ctx) {
+  /**
+   *  dtsec is the time passed since last frame in seconds.
+   *  The abbreviation stands for
+   *    "[D]elta [T]ime in [SEC]onds"
+   */
+  drawBackground();
+  drawCharacters();
+  fpsCounter.update(dtsec);
+  fpsCounter.draw(ctx);
 }
