@@ -3,14 +3,18 @@ const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+// one dictionary for all images:
+const images = {};
+
 // load background image
-backgroundImg = new Image();
-backgroundImg.src =
+images.background = new Image();
+images.background.src =
   './assets/stone-floor/StoneFloorTexture_1.png';
 
-// load images
-const images = {};
+// load player image
 images.player = new Image();
+images.player.src = './non-free-assets/cuphead.png';
+
 const characterActions = ['up', 'right', 'down right'];
 const numberOfCharacters = 10;
 const characters = [];
@@ -95,14 +99,14 @@ class Character {
 for (i = 0; i < numberOfCharacters; i++) {
   characters.push(new Character());
 }
-images.player.src = './non-free-assets/cuphead.png';
 
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
   ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
+
 function drawBackground() {
   backgroundPattern = ctx.createPattern(
-    backgroundImg,
+    images.background,
     'repeat'
   );
   ctx.fillStyle = backgroundPattern;
