@@ -1,0 +1,25 @@
+This file containts the required
+"Copyright/Attribution Notice" for the used assets,
+according to
+https://opengameart.org/content/faq#q-how-to-credit
+The credit is given in the following format:
+
+    [asset name]"
+    by [author name]
+    licensed [license(s)]:
+    [asset url]
+
+------------------------------------------------------------
+---------- COPYRIGHT AND ATTRIBUTION NOTICE ----------------
+------------------------------------------------------------
+
+"Street Animal Pixel Art (PNG)"
+by CraftPix.net 2D Game Assets
+licensed OGA-BY 3.0
+https://opengameart.org/content/street-animal-pixel-art
+
+
+"Handpainted Stone Floor Texture"
+by PamNawi
+licensed CC-BY 4.0
+https://opengameart.org/content/handpainted-stone-floor-texture
