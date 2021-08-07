@@ -83,56 +83,57 @@ function gameLoop(timeStamp) {
   mainUpdate(secondsPassed, ctx);
   window.requestAnimationFrame(gameLoop);
 }
+let animationFrames = {
+  up: {
+    frameY: 0,
+    minFrame: 4,
+    maxFrame: 15,
+  },
+  right: {
+    frameY: 3,
+    minFrame: 3,
+    maxFrame: 13,
+  },
+  jump: {
+    frameY: 7,
+    minFrame: 0,
+    maxFrame: 9,
+  },
+  'down right': {
+    frameY: 4,
+    minFrame: 4,
+    maxFrame: 15,
+  },
+};
 
-class Character {
-  constructor(canvas) {
+class AnimatedSprite {
+  constructor(animationFrames) {
+    this.animationFrames = animationFrames;
     this.width = 103.0625;
     this.height = 113.125;
     this.frameX = 3;
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
     this.speed = Math.random() * 3.5 + 1.5;
-    this.action =
-      characterActions[
-        Math.floor(Math.random() * characterActions.length)
-      ];
+    this.action = characterActions[0];
+    this.startAnimation(this.action);
+  }
 
-    let animationFrames = {
-      up: {
-        frameY: 0,
-        minFrame: 4,
-        maxFrame: 15,
-      },
-      right: {
-        frameY: 3,
-        minFrame: 3,
-        maxFrame: 13,
-      },
-      jump: {
-        frameY: 7,
-        minFrame: 0,
-        maxFrame: 9,
-      },
-      'down right': {
-        frameY: 4,
-        minFrame: 4,
-        maxFrame: 15,
-      },
-    };
-
+  startAnimation(action) {
+    this.action = action;
     [this.frameY, this.minFrame, this.maxFrame] =
       Object.values(animationFrames[this.action]);
   }
 
-  draw() {
+  draw(x, y) {
     drawSprite(
       images.player,
       this.width * this.frameX,
       this.height * this.frameY,
       this.width,
       this.height,
-      this.x,
-      this.y,
+      x,
+      y,
       this.width,
       this.height
     );
@@ -141,6 +142,30 @@ class Character {
     if (this.frameX < this.maxFrame) this.frameX++;
     else this.frameX = this.minFrame;
   }
+}
+
+class Character {
+  constructor(canvas) {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.speed = Math.random() * 3.5 + 1.5;
+    this.action =
+      characterActions[
+        Math.floor(Math.random() * characterActions.length)
+      ];
+    this.animatedSprite = new AnimatedSprite(
+      animationFrames
+    );
+    this.animatedSprite.startAnimation(this.action);
+
+    this.width = this.animatedSprite.width;
+    this.height = this.animatedSprite.height;
+  }
+
+  draw() {
+    this.animatedSprite.draw(this.x, this.y);
+  }
+
   update() {
     if (this.action === 'right') {
       if (this.x > canvas.width) {
