@@ -38,16 +38,25 @@ window.addEventListener('resize', () => {
 });
 
 let secondsPassed;
-let oldTimeStamp;
+let oldTimeStamp = 0.0;
 let fps;
+let fpsRenderBuffer = 0;
+let timeSinceLastFpsUpdate = 0.1;
 
 function gameLoop(timeStamp) {
   // calculate time delta
-  secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+  let millisecondsPassed = timeStamp - oldTimeStamp;
+  secondsPassed = millisecondsPassed / 1000;
   oldTimeStamp = timeStamp;
 
   // calculate and draw FPS
-  fps = Math.round(1 / secondsPassed);
+  fps = Math.round((1 / secondsPassed) * 100) / 100;
+  console.log(timeSinceLastFpsUpdate + secondsPassed);
+  timeSinceLastFpsUpdate += secondsPassed;
+  if (timeSinceLastFpsUpdate > 0.5) {
+    fpsRenderBuffer = fps;
+    timeSinceLastFpsUpdate = 0.0;
+  }
 
   draw();
   window.requestAnimationFrame(gameLoop);
@@ -144,15 +153,23 @@ function drawBackground() {
 }
 
 function drawFPS(fps) {
+  /** In chrome requestAnimationFrame's callback doesn't
+   *  get called faster than 60Hz. That's the FPS are
+   *  a stable 60FPS.
+   */
+  function financial(x) {
+    return Number.parseFloat(x).toFixed(2);
+  }
   ctx.font = '25px Arial';
   ctx.fillStyle = 'greenyellow';
-  ctx.fillText('FPS: ' + fps, 10, 30);
+  ctx.fillText('FPS: ' + financial(fps), 10, 30);
 }
+
 function draw() {
   drawBackground();
   for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
   }
-  drawFPS(fps);
+  drawFPS(fpsRenderBuffer);
 }
