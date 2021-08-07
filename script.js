@@ -1,8 +1,6 @@
 'use strict';
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+let canvas;
+let ctx;
 
 // one dictionary for all images:
 const images = {};
@@ -20,8 +18,32 @@ const characterActions = ['up', 'right', 'down right'];
 const numberOfCharacters = 10;
 const characters = [];
 
+window.onload = init;
+function init() {
+  canvas = document.querySelector('canvas');
+  ctx = canvas.getContext('2d');
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  for (let i = 0; i < numberOfCharacters; i++) {
+    characters.push(new Character(canvas));
+  }
+  // start the game loop
+  window.requestAnimationFrame(gameLoop);
+}
+
+window.addEventListener('resize', () => {
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+});
+
+function gameLoop(timeStamp) {
+  draw();
+  window.requestAnimationFrame(gameLoop);
+}
+
 class Character {
-  constructor() {
+  constructor(canvas) {
     this.width = 103.0625;
     this.height = 113.125;
     this.frameX = 3;
@@ -97,10 +119,6 @@ class Character {
   }
 }
 
-for (let i = 0; i < numberOfCharacters; i++) {
-  characters.push(new Character());
-}
-
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
   ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
@@ -114,16 +132,10 @@ function drawBackground() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function animate() {
+function draw() {
   drawBackground();
   for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
   }
 }
-
-window.onload = setInterval(animate, 1000 / 20);
-window.addEventListener('resize', () => {
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-});
