@@ -1,3 +1,4 @@
+'use strict';
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
@@ -96,7 +97,7 @@ class Character {
   }
 }
 
-for (i = 0; i < numberOfCharacters; i++) {
+for (let i = 0; i < numberOfCharacters; i++) {
   characters.push(new Character());
 }
 
@@ -105,7 +106,7 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
 }
 
 function drawBackground() {
-  backgroundPattern = ctx.createPattern(
+  let backgroundPattern = ctx.createPattern(
     images.background,
     'repeat'
   );
@@ -115,7 +116,7 @@ function drawBackground() {
 
 function animate() {
   drawBackground();
-  for (i = 0; i < numberOfCharacters; i++) {
+  for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
     characters[i].update();
   }
