@@ -20,10 +20,11 @@ const characters = [];
 
 window.onload = init;
 function init() {
-  canvas = document.querySelector('canvas');
+  canvas = document.getElementById('canvas');
   ctx = canvas.getContext('2d');
-  canvas.width = 1280;
-  canvas.height = 720;
+  canvas.width = 1920;
+  canvas.height = 1080;
+  fitCanvasToWindow();
 
   for (let i = 0; i < numberOfCharacters; i++) {
     characters.push(new Character(canvas));
@@ -31,6 +32,35 @@ function init() {
   // start the game loop
   window.requestAnimationFrame(gameLoop);
 }
+
+function fitCanvasToWindow() {
+  const wx = window.innerWidth; //window width
+  const wy = window.innerHeight; // window height
+  let cx; // canvas width
+  let cy; // canvas height
+  const r = 16 / 9; // aspect ratio
+  /**
+   * cx/cy = r
+   * cx = r * cy
+   * cy = cx / r
+   */
+  if (wx / wy == r) {
+    cx = wx;
+    cy = wy;
+  } else if (wx / wy > r) {
+    cy = wy;
+    cx = r * cy;
+  } else if (wx / wy < r) {
+    cx = wx;
+    cy = cx / r;
+  }
+  canvas.style.width = `${cx}px`;
+  canvas.style.height = `${cy}px`;
+}
+
+window.addEventListener('resize', () => {
+  fitCanvasToWindow();
+});
 
 let secondsPassed;
 let oldTimeStamp = 0.0;
