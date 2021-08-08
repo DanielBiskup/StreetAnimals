@@ -22,8 +22,8 @@ window.onload = init;
 function init() {
   canvas = document.querySelector('canvas');
   ctx = canvas.getContext('2d');
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+  canvas.width = 1280;
+  canvas.height = 720;
 
   for (let i = 0; i < numberOfCharacters; i++) {
     characters.push(new Character(canvas));
@@ -31,11 +31,6 @@ function init() {
   // start the game loop
   window.requestAnimationFrame(gameLoop);
 }
-
-window.addEventListener('resize', () => {
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
-});
 
 let secondsPassed;
 let oldTimeStamp = 0.0;
