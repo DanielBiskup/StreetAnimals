@@ -34,8 +34,13 @@ function init() {
 }
 
 function fitCanvasToWindow() {
-  const wx = window.innerWidth; //window width
-  const wy = window.innerHeight; // window height
+  const wx = document.body.clientWidth;
+  const wy = document.body.clientHeight;
+  // The the two lines above using document.body.clientWidth
+  // work great, while using window.innerWidth below
+  // used to cause problems, especially on mobile.
+  //    const wx = window.innerWidth; //window width
+  //    const wy = window.innerHeight; // window height
   let cx; // canvas width
   let cy; // canvas height
   const r = 16 / 9; // aspect ratio
