@@ -22,12 +22,17 @@ function init() {
   canvas.height = 1080;
   fitCanvasToWindow();
 
-  const renderer = new Renderer(canvas, ctx);
-  for (let i = 0; i < numberOfCharacters; i++) {
-    characters.push(new Character(canvas, renderer));
-  }
-  // start the game loop
-  window.requestAnimationFrame(gameLoop);
+  fetch('./animationData.json')
+    .then((response) => response.json())
+    .then((data) => {
+      animationData = data;
+      const renderer = new Renderer(canvas, ctx);
+      for (let i = 0; i < numberOfCharacters; i++) {
+        characters.push(new Character(canvas, renderer));
+      }
+      // start the game loop
+      window.requestAnimationFrame(gameLoop);
+    });
 }
 
 function fitCanvasToWindow() {
@@ -121,6 +126,8 @@ function gameLoop(timeStamp) {
   mainUpdate(secondsPassed, ctx);
   window.requestAnimationFrame(gameLoop);
 }
+let animationData;
+/**
 let animationData = {
   meta: {
     fps: 30,
@@ -153,6 +160,7 @@ let animationData = {
     },
   },
 };
+*/
 
 function drawBackground() {
   let backgroundPattern = ctx.createPattern(
