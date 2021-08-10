@@ -139,6 +139,7 @@ let animationFrames = {
 class AnimatedSprite {
   constructor(animationFrames) {
     this.animationFrames = animationFrames;
+    this.fps = 30; // fps of the animation
     this.width = 103.0625;
     this.height = 113.125;
     this.frameX = 3;
@@ -167,7 +168,9 @@ class AnimatedSprite {
       this.width,
       this.height
     );
+  }
 
+  update(dtsec) {
     // animate sprites
     if (this.frameX < this.maxFrame) this.frameX++;
     else this.frameX = this.minFrame;
@@ -187,7 +190,6 @@ class Character {
       animationFrames
     );
     this.animatedSprite.startAnimation(this.action);
-
     this.width = this.animatedSprite.width;
     this.height = this.animatedSprite.height;
   }
@@ -196,7 +198,11 @@ class Character {
     this.animatedSprite.draw(this.x, this.y);
   }
 
-  update() {
+  update(dtsec) {
+    // Update Components:
+    this.animatedSprite.update(dtsec);
+
+    // Logic:
     if (this.action === 'right') {
       if (this.x > canvas.width) {
         this.x = 0 - this.width;
@@ -242,7 +248,12 @@ function drawBackground() {
 function drawCharacters() {
   for (let i = 0; i < numberOfCharacters; i++) {
     characters[i].draw();
-    characters[i].update();
+  }
+}
+
+function updateCharacters(dtsec) {
+  for (let i = 0; i < numberOfCharacters; i++) {
+    characters[i].update(dtsec);
   }
 }
 
@@ -252,8 +263,15 @@ function mainUpdate(dtsec, ctx) {
    *  The abbreviation stands for
    *    "[D]elta [T]ime in [SEC]onds"
    */
+
+  // Background:
   drawBackground();
+
+  // Characters:
+  updateCharacters(dtsec);
   drawCharacters();
+
+  // FPS Counter:
   fpsCounter.update(dtsec);
   fpsCounter.draw(ctx);
 }
