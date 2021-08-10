@@ -113,59 +113,81 @@ function gameLoop(timeStamp) {
   mainUpdate(secondsPassed, ctx);
   window.requestAnimationFrame(gameLoop);
 }
-let animationFrames = {
-  up: {
-    frameY: 0,
-    minFrame: 4,
-    maxFrame: 15,
+let animationData = {
+  meta: {
+    fps: 30,
+    initialAnimation: 'jump',
+    sheetWidth: 1649,
+    sheetHeight: 905,
+    numberOfColumns: 16,
+    numberOfRows: 8,
   },
-  right: {
-    frameY: 3,
-    minFrame: 3,
-    maxFrame: 13,
-  },
-  jump: {
-    frameY: 7,
-    minFrame: 0,
-    maxFrame: 9,
-  },
-  'down right': {
-    frameY: 4,
-    minFrame: 4,
-    maxFrame: 15,
+  animations: {
+    up: {
+      row: 0,
+      minFrame: 4,
+      maxFrame: 15,
+    },
+    right: {
+      row: 3,
+      minFrame: 3,
+      maxFrame: 13,
+    },
+    jump: {
+      row: 7,
+      minFrame: 0,
+      maxFrame: 9,
+    },
+    'down right': {
+      row: 4,
+      minFrame: 4,
+      maxFrame: 15,
+    },
   },
 };
 
 class AnimatedSprite {
-  constructor(animationFrames) {
-    this.animationFrames = animationFrames;
-    this.fps = 30; // fps of the animation
+  constructor(spriteSheet, animationData) {
+    this.spriteSheet = spriteSheet;
     this.ticker = 0.0;
-    this.width = 103.0625;
-    this.height = 113.125;
-    this.frameX = 3;
-    this.speed = Math.random() * 3.5 + 1.5;
-    this.action = characterActions[0];
-    this.startAnimation(this.action);
+
+    // Initilize from data:
+    this.animationData = animationData;
+    this.fps = animationData.meta.fps; // fps of the animation
+    this.frameWidth =
+      animationData.meta.sheetWidth /
+      animationData.meta.numberOfColumns;
+    this.frameHeight =
+      animationData.meta.sheetHeight /
+      animationData.meta.numberOfRows;
+    this.startAnimation(
+      animationData.meta.initialAnimation
+    );
   }
 
   startAnimation(action) {
     this.action = action;
-    [this.frameY, this.minFrame, this.maxFrame] =
-      Object.values(animationFrames[this.action]);
+
+    const actionAnimation =
+      this.animationData['animations'][this.action];
+    console.log(this.action);
+
+    [this.row, this.minFrame, this.maxFrame] =
+      Object.values(actionAnimation);
+    this.column = this.minFrame;
   }
 
   draw(x, y) {
     drawSprite(
-      images.player,
-      this.width * this.frameX,
-      this.height * this.frameY,
-      this.width,
-      this.height,
+      this.spriteSheet,
+      this.frameWidth * this.column,
+      this.frameHeight * this.row,
+      this.frameWidth,
+      this.frameHeight,
       x,
       y,
-      this.width,
-      this.height
+      this.frameWidth,
+      this.frameHeight
     );
   }
 
@@ -174,8 +196,8 @@ class AnimatedSprite {
     this.ticker += dtsec;
     if (this.ticker >= 1 / this.fps) {
       this.ticker = 0.0;
-      if (this.frameX < this.maxFrame) this.frameX++;
-      else this.frameX = this.minFrame;
+      if (this.column < this.maxFrame) this.column++;
+      else this.column = this.minFrame;
     }
   }
 }
@@ -190,11 +212,12 @@ class Character {
         Math.floor(Math.random() * characterActions.length)
       ];
     this.animatedSprite = new AnimatedSprite(
-      animationFrames
+      images.player,
+      animationData
     );
     this.animatedSprite.startAnimation(this.action);
-    this.width = this.animatedSprite.width;
-    this.height = this.animatedSprite.height;
+    this.width = this.animatedSprite.frameWidth;
+    this.height = this.animatedSprite.frameHeight;
   }
 
   draw() {
