@@ -4,7 +4,6 @@
 let canvas;
 let ctx;
 
-let renderer;
 const images = {};
 images.background = new Image();
 images.background.src =
@@ -12,7 +11,6 @@ images.background.src =
 images.player = new Image();
 images.player.src = './non-free-assets/cuphead.png';
 
-const characterActions = ['up', 'right', 'down right'];
 const numberOfCharacters = 10;
 const characters = [];
 
@@ -24,9 +22,9 @@ function init() {
   canvas.height = 1080;
   fitCanvasToWindow();
 
-  renderer = new Renderer(canvas, ctx);
+  const renderer = new Renderer(canvas, ctx);
   for (let i = 0; i < numberOfCharacters; i++) {
-    characters.push(new Character(canvas));
+    characters.push(new Character(canvas, renderer));
   }
   // start the game loop
   window.requestAnimationFrame(gameLoop);
@@ -158,12 +156,15 @@ let animationData = {
 
 class AnimatedSprite {
   constructor(spriteSheet, animationData, renderer) {
-    this.renderer;
-    this.spriteSheet = spriteSheet;
-    this.ticker = 0.0;
+    // Systems
+    this.renderer = renderer;
 
-    // Initilize from data:
+    // Data
+    this.spriteSheet = spriteSheet;
     this.animationData = animationData;
+
+    // Initilize from data
+    this.ticker = 0.0;
     this.fps = animationData.meta.fps; // fps of the animation
     this.frameWidth =
       animationData.meta.sheetWidth /
@@ -189,7 +190,7 @@ class AnimatedSprite {
   }
 
   draw(x, y) {
-    renderer.drawSprite(
+    this.renderer.drawSprite(
       this.spriteSheet,
       this.frameWidth * this.column,
       this.frameHeight * this.row,
@@ -214,17 +215,19 @@ class AnimatedSprite {
 }
 
 class Character {
-  constructor(canvas) {
+  constructor(canvas, renderer) {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
     this.speed = Math.random() * 3.5 + 1.5;
+    const characterActions = ['up', 'right', 'down right'];
     this.action =
       characterActions[
         Math.floor(Math.random() * characterActions.length)
       ];
     this.animatedSprite = new AnimatedSprite(
       images.player,
-      animationData
+      animationData,
+      renderer
     );
     this.animatedSprite.startAnimation(this.action);
     this.width = this.animatedSprite.frameWidth;
