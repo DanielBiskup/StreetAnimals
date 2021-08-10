@@ -140,11 +140,10 @@ class AnimatedSprite {
   constructor(animationFrames) {
     this.animationFrames = animationFrames;
     this.fps = 30; // fps of the animation
+    this.ticker = 0.0;
     this.width = 103.0625;
     this.height = 113.125;
     this.frameX = 3;
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
     this.speed = Math.random() * 3.5 + 1.5;
     this.action = characterActions[0];
     this.startAnimation(this.action);
@@ -172,8 +171,12 @@ class AnimatedSprite {
 
   update(dtsec) {
     // animate sprites
-    if (this.frameX < this.maxFrame) this.frameX++;
-    else this.frameX = this.minFrame;
+    this.ticker += dtsec;
+    if (this.ticker >= 1 / this.fps) {
+      this.ticker = 0.0;
+      if (this.frameX < this.maxFrame) this.frameX++;
+      else this.frameX = this.minFrame;
+    }
   }
 }
 
