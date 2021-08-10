@@ -1,16 +1,14 @@
 'use strict';
+
+// Globals:
 let canvas;
 let ctx;
 
-// one dictionary for all images:
+let renderer;
 const images = {};
-
-// load background image
 images.background = new Image();
 images.background.src =
   './assets/stone-floor/StoneFloorTexture_1.png';
-
-// load player image
 images.player = new Image();
 images.player.src = './non-free-assets/cuphead.png';
 
@@ -26,6 +24,7 @@ function init() {
   canvas.height = 1080;
   fitCanvasToWindow();
 
+  renderer = new Renderer(canvas, ctx);
   for (let i = 0; i < numberOfCharacters; i++) {
     characters.push(new Character(canvas));
   }
@@ -61,6 +60,17 @@ function fitCanvasToWindow() {
   }
   canvas.style.width = `${cx}px`;
   canvas.style.height = `${cy}px`;
+}
+
+class Renderer {
+  constructor(canvas, ctx) {
+    this.canvas = canvas;
+    this.ctx = ctx;
+  }
+
+  drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
+    this.ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+  }
 }
 
 window.addEventListener('resize', () => {
@@ -147,7 +157,8 @@ let animationData = {
 };
 
 class AnimatedSprite {
-  constructor(spriteSheet, animationData) {
+  constructor(spriteSheet, animationData, renderer) {
+    this.renderer;
     this.spriteSheet = spriteSheet;
     this.ticker = 0.0;
 
@@ -178,7 +189,7 @@ class AnimatedSprite {
   }
 
   draw(x, y) {
-    drawSprite(
+    renderer.drawSprite(
       this.spriteSheet,
       this.frameWidth * this.column,
       this.frameHeight * this.row,
@@ -256,10 +267,6 @@ class Character {
       }
     }
   }
-}
-
-function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
-  ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 }
 
 function drawBackground() {
