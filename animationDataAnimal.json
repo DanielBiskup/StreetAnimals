@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "fps": 30,
+    "initialAnimation": "walk",
+    "sheetWidth": 288,
+    "sheetHeight": 48,
+    "numberOfColumns": 6,
+    "numberOfRows": 1
+  },
+  "animations": {
+    "walk": {
+      "row": 0,
+      "minFrame": 0,
+      "maxFrame": 5
+    }
+  }
+}

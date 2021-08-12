@@ -9,7 +9,8 @@ images.background = new Image();
 images.background.src =
   './assets/stone-floor/StoneFloorTexture_1.png';
 images.player = new Image();
-images.player.src = './non-free-assets/cuphead.png';
+// images.player.src = './non-free-assets/cuphead.png';
+images.player.src = './assets/street_animals/1 Dog/Walk.png';
 
 const numberOfCharacters = 10;
 const characters = [];
@@ -22,7 +23,8 @@ function init() {
   canvas.height = 1080;
   fitCanvasToWindow();
 
-  fetch('./animationData.json')
+  let animationDataPath = './animationDataAnimal.json';
+  fetch(animationDataPath)
     .then((response) => response.json())
     .then((data) => {
       animationData = data;

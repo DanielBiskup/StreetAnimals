@@ -3,7 +3,7 @@ class Character {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
     this.speed = Math.random() * 3.5 + 1.5;
-    const characterActions = ['up', 'right', 'down right'];
+    const characterActions = ['walk']
     this.action =
       characterActions[
         Math.floor(Math.random() * characterActions.length)
@@ -27,7 +27,7 @@ class Character {
     this.animatedSprite.update(dtsec);
 
     // Logic:
-    if (this.action === 'right') {
+    if (this.action === 'walk') {
       if (this.x > canvas.width) {
         this.x = 0 - this.width;
         this.y =
