@@ -127,40 +127,6 @@ function gameLoop(timeStamp) {
   window.requestAnimationFrame(gameLoop);
 }
 let animationData;
-/**
-let animationData = {
-  meta: {
-    fps: 30,
-    initialAnimation: 'jump',
-    sheetWidth: 1649,
-    sheetHeight: 905,
-    numberOfColumns: 16,
-    numberOfRows: 8,
-  },
-  animations: {
-    up: {
-      row: 0,
-      minFrame: 4,
-      maxFrame: 15,
-    },
-    right: {
-      row: 3,
-      minFrame: 3,
-      maxFrame: 13,
-    },
-    jump: {
-      row: 7,
-      minFrame: 0,
-      maxFrame: 9,
-    },
-    'down right': {
-      row: 4,
-      minFrame: 4,
-      maxFrame: 15,
-    },
-  },
-};
-*/
 
 function drawBackground() {
   let backgroundPattern = ctx.createPattern(
