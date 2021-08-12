@@ -33,8 +33,7 @@ class AnimatedSprite {
     this.column = this.minFrame;
   }
 
-  draw(x, y) {
-    const scale = 3;
+  draw(x, y, scale) {
     this.renderer.drawSprite(
       this.spriteSheet,
       this.frameWidth * this.column,

@@ -4,7 +4,7 @@ class Character {
 
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-
+    this.scale = 3.0;
 
     // speed in pixels per second
     this.speed_pps = 100.0 + 100.0 * Math.random();
@@ -27,7 +27,7 @@ class Character {
 
   draw() {
     // The animated sprite and its origin:
-    this.animatedSprite.draw(this.spriteX, this.spriteY);
+    this.animatedSprite.draw(this.spriteX, this.spriteY, this.scale);
     this.renderer.drawDot(this.spriteX, this.spriteY, 'cyan')
 
     // Hitbox and its origin:
@@ -54,9 +54,8 @@ class Character {
     const relHitboxOffsetX = 0.0;
     const relHitboxOffsetY = 0.5;
 
-    const scale = 3.;
-    this.hitboxWidth = this.originalWidth * relHitboxWidth * scale;
-    this.hitboxHeight = this.originalHeight * relHitboxHeight * scale;
+    this.hitboxWidth = this.originalWidth * relHitboxWidth * this.scale;
+    this.hitboxHeight = this.originalHeight * relHitboxHeight * this.scale;
   
     let anchor;
     anchor = "center-of-bounding-box";
