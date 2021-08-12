@@ -76,6 +76,13 @@ class Renderer {
   drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
     this.ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
   }
+  
+  drawRect(x,y,w,h) {
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = "red";
+    this.ctx.rect(x, y, w, h);
+    this.ctx.stroke();
+  }
 }
 
 window.addEventListener('resize', () => {

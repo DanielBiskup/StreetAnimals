@@ -1,7 +1,10 @@
 class Character {
   constructor(canvas, renderer) {
+    this.renderer = renderer; 
+
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
+
 
     // speed in pixels per second
     this.speed_pps = 100.0 + 100.0 * Math.random();
@@ -22,6 +25,8 @@ class Character {
 
   draw() {
     this.animatedSprite.draw(this.x, this.y);
+    this.renderer.drawRect(this.x, this.y, this.width, this.height);
+    
   }
 
   update(dtsec) {
