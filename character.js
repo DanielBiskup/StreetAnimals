@@ -19,26 +19,41 @@ class Character {
       renderer
     );
     this.animatedSprite.startAnimation(this.action);
-    this.width = this.animatedSprite.frameWidth;
-    this.height = this.animatedSprite.frameHeight;
+    this.originalWidth = this.animatedSprite.frameWidth;
+    this.originalHeight = this.animatedSprite.frameHeight;
+    this.hitboxHeight = this.originalHeight;
+    this.hitboxWidth = this.originalWidth;
   }
 
   draw() {
     this.animatedSprite.draw(this.x, this.y);
-    this.renderer.drawRect(this.x, this.y, this.width, this.height);
     
+    this.renderer.drawRect(this.hitboxX, this.hitboxY, this.hitboxWidth, this.hitboxHeight);
+    this.renderer.drawDot(this.x, this.y);
   }
 
   update(dtsec) {
     // Update Components:
     this.animatedSprite.update(dtsec);
 
+    // The hitbox values are relative to the orignal
+    // unscaled width and height of the object:
+    const hitboxOffsetX = 0.0;
+    const hitboxOffsetY = 0.5;
+    const hitboxWidth = 1.0;
+    const hitboxHeight = 0.7;
+    const scale = 3.;
+    this.hitboxWidth = this.originalWidth * hitboxWidth * scale;
+    this.hitboxHeight = this.originalHeight * hitboxHeight * scale;
+    this.hitboxX = this.x + (this.hitboxWidth * hitboxOffsetX);
+    this.hitboxY = this.y + (this.hitboxHeight * hitboxOffsetY);
+  
     // Logic:
     if (this.action === 'walk') {
       if (this.x > canvas.width) {
-        this.x = 0 - this.width;
+        this.x = 0 - this.hitboxWidth;
         this.y =
-          Math.random() * canvas.height - this.height;
+          Math.random() * canvas.height - this.hitboxHeight;
       } else {
         this.x += this.speed_pps * dtsec;
       }

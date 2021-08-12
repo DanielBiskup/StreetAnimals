@@ -83,6 +83,13 @@ class Renderer {
     this.ctx.rect(x, y, w, h);
     this.ctx.stroke();
   }
+  
+  drawDot(x,y) {
+    this.ctx.beginPath();
+    this.ctx.fillStyle = 'yellowgreen'
+    this.ctx.fillRect(x-5,y-5,10,10);
+    this.ctx.stroke();
+  }
 }
 
 window.addEventListener('resize', () => {

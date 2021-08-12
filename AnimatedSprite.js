@@ -34,6 +34,7 @@ class AnimatedSprite {
   }
 
   draw(x, y) {
+    const scale = 3;
     this.renderer.drawSprite(
       this.spriteSheet,
       this.frameWidth * this.column,
@@ -42,8 +43,8 @@ class AnimatedSprite {
       this.frameHeight,
       x,
       y,
-      this.frameWidth,
-      this.frameHeight
+      this.frameWidth * scale,
+      this.frameHeight * scale
     );
   }
 
