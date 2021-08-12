@@ -84,9 +84,9 @@ class Renderer {
     this.ctx.stroke();
   }
   
-  drawDot(x,y) {
+  drawDot(x,y, color) {
     this.ctx.beginPath();
-    this.ctx.fillStyle = 'yellowgreen'
+    this.ctx.fillStyle = color;
     this.ctx.fillRect(x-5,y-5,10,10);
     this.ctx.stroke();
   }
