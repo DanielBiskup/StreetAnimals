@@ -2,7 +2,9 @@ class Character {
   constructor(canvas, renderer) {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.speed = Math.random() * 3.5 + 1.5;
+
+    // speed in pixels per second
+    this.speed_pps = 100.0 + 100.0 * Math.random();
     const characterActions = ['walk']
     this.action =
       characterActions[
@@ -33,25 +35,25 @@ class Character {
         this.y =
           Math.random() * canvas.height - this.height;
       } else {
-        this.x += this.speed;
+        this.x += this.speed_pps * dtsec;
       }
     }
-    if (this.action === 'up') {
-      if (this.y < 0 - this.height) {
-        this.y = canvas.height;
-        this.x = Math.random() * canvas.width;
-      } else {
-        this.y -= this.speed;
-      }
-    }
-    if (this.action == 'down right') {
-      if (this.y > canvas.height || this.x > canvas.width) {
-        this.y = 0 - this.height;
-        this.x = Math.random() * canvas.width;
-      } else {
-        this.x += this.speed;
-        this.y += this.speed;
-      }
-    }
+    // if (this.action === 'up') {
+    //   if (this.y < 0 - this.height) {
+    //     this.y = canvas.height;
+    //     this.x = Math.random() * canvas.width;
+    //   } else {
+    //     this.y -= this.speed;
+    //   }
+    // }
+    // if (this.action == 'down right') {
+    //   if (this.y > canvas.height || this.x > canvas.width) {
+    //     this.y = 0 - this.height;
+    //     this.x = Math.random() * canvas.width;
+    //   } else {
+    //     this.x += this.speed;
+    //     this.y += this.speed;
+    //   }
+    // }
   }
 }
