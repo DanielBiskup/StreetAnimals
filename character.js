@@ -48,7 +48,7 @@ class Character {
     // purposes:
     const maxScale = 10.0;
     const minScale = 1.0;
-    const scaleChangePerSecond = 10.0;
+    const scaleChangePerSecond = 5.0;
 
     if (this.scalingUp) {
       this.scale = this.scale + scaleChangePerSecond * dtsec;

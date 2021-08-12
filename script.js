@@ -71,6 +71,10 @@ class Renderer {
   constructor(canvas, ctx) {
     this.canvas = canvas;
     this.ctx = ctx;
+
+    // Disable smoothing because we are dealing with
+    // pixel art where we don't want any smoothing
+    this.ctx.imageSmoothingEnabled = false;
   }
 
   drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
@@ -80,14 +84,16 @@ class Renderer {
   drawRect(x,y,w,h) {
     this.ctx.beginPath();
     this.ctx.strokeStyle = "red";
+    this.ctx.lineWidth = "6";
     this.ctx.rect(x, y, w, h);
     this.ctx.stroke();
   }
   
   drawDot(x,y, color) {
+    const size = 20;
     this.ctx.beginPath();
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(x-5,y-5,10,10);
+    this.ctx.fillRect(x-size/2,y-size/2,size,size);
     this.ctx.stroke();
   }
 }
