@@ -2,7 +2,7 @@
 a simple 2D shoot 'em up in HTML and JavaScript
 
 
-## Anchor placement
+## [v0.1-alpha](https://github.com/DanielBiskup/StreetAnimals/tree/v0.1-alpha) Anchor placement
 What I mean by anchor is the (x,y)-position of an object
 on the screen. Objects usually have some form of image and
 a hitbox which we can use to detect collisions with
