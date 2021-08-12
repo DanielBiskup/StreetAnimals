@@ -90,22 +90,5 @@ class Character {
         this.x += this.speed_pps * dtsec;
       }
     }
-    // if (this.action === 'up') {
-    //   if (this.y < 0 - this.height) {
-    //     this.y = canvas.height;
-    //     this.x = Math.random() * canvas.width;
-    //   } else {
-    //     this.y -= this.speed;
-    //   }
-    // }
-    // if (this.action == 'down right') {
-    //   if (this.y > canvas.height || this.x > canvas.width) {
-    //     this.y = 0 - this.height;
-    //     this.x = Math.random() * canvas.width;
-    //   } else {
-    //     this.x += this.speed;
-    //     this.y += this.speed;
-    //   }
-    // }
-  }
+ }
 }
