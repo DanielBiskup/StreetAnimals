@@ -4,7 +4,9 @@ class Character {
 
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.scale = 3.0;
+    
+    this.scale = 1.0;
+    this.scalingUp = true;
 
     // speed in pixels per second
     this.speed_pps = 100.0 + 100.0 * Math.random();
@@ -41,6 +43,24 @@ class Character {
   update(dtsec) {
     // Update Components:
     this.animatedSprite.update(dtsec);
+
+    // Dynamically change the scale for demonstration
+    // purposes:
+    const maxScale = 10.0;
+    const minScale = 1.0;
+    const scaleChangePerSecond = 10.0;
+
+    if (this.scalingUp) {
+      this.scale = this.scale + scaleChangePerSecond * dtsec;
+      if (this.scale >= maxScale) {
+        this.scalingUp = false;
+      }
+    } else {
+      this.scale = this.scale - scaleChangePerSecond * dtsec;
+      if (this.scale <= minScale) {
+        this.scalingUp = true;
+      }
+    }
 
     // The hitbox values are relative to the orignal
     // unscaled width and height of the hitbox.
