@@ -81,10 +81,10 @@ class Renderer {
     this.ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
   }
   
-  drawRect(x,y,w,h) {
+  drawRect(x,y,w,h, color, thickness) {
     this.ctx.beginPath();
-    this.ctx.strokeStyle = "red";
-    this.ctx.lineWidth = "6";
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = thickness;
     this.ctx.rect(x, y, w, h);
     this.ctx.stroke();
   }

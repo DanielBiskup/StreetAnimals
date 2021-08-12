@@ -30,10 +30,23 @@ class Character {
   draw() {
     // The animated sprite and its origin:
     this.animatedSprite.draw(this.spriteX, this.spriteY, this.scale);
+    this.renderer.drawRect(
+      this.spriteX,
+      this.spriteY,
+      this.animatedSprite.frameWidth * this.scale,
+      this.animatedSprite.frameHeight * this.scale,
+      'cyan',
+      12)
     this.renderer.drawDot(this.spriteX, this.spriteY, 'cyan')
 
     // Hitbox and its origin:
-    this.renderer.drawRect(this.hitboxX, this.hitboxY, this.hitboxWidth, this.hitboxHeight);
+    this.renderer.drawRect(
+      this.hitboxX,
+      this.hitboxY,
+      this.hitboxWidth,
+      this.hitboxHeight,
+      'red',
+      6);
     this.renderer.drawDot(this.hitboxX, this.hitboxY, 'red');
     
     // Anchor position:
@@ -70,9 +83,9 @@ class Character {
     // twice as high the character.
     // All four values are ecpected to be between 0.0 and 1.0.
     const relHitboxWidth = 1.0;
-    const relHitboxHeight = 0.7;
+    const relHitboxHeight = 0.6;
     const relHitboxOffsetX = 0.0;
-    const relHitboxOffsetY = 0.5;
+    const relHitboxOffsetY = 0.65;
 
     this.hitboxWidth = this.originalWidth * relHitboxWidth * this.scale;
     this.hitboxHeight = this.originalHeight * relHitboxHeight * this.scale;
