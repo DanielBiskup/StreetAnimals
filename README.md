@@ -1,7 +1,2 @@
-# Street-Animals
-
-As a powerful warrior you have to protect the sanctuary from
-inbound monsters of the forest.
-
-As you slaughter enemies you earn gold which you can trade
-for stronger weaponary and protective gear.
+# Street Animals
+a simple 2D shoot 'em up in HTML and JavaScript
