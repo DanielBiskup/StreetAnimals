@@ -10,7 +10,8 @@ images.background.src =
   './assets/stone-floor/StoneFloorTexture_1.png';
 images.player = new Image();
 // images.player.src = './non-free-assets/cuphead.png';
-images.player.src = './assets/street_animals/1 Dog/Walk.png';
+images.player.src =
+  './assets/street_animals/1 Dog/Walk.png';
 
 const numberOfCharacters = 10;
 const characters = [];
@@ -36,6 +37,10 @@ function init() {
       window.requestAnimationFrame(gameLoop);
     });
 }
+
+window.addEventListener('resize', () => {
+  fitCanvasToWindow();
+});
 
 function fitCanvasToWindow() {
   const wx = document.body.clientWidth;
@@ -80,27 +85,28 @@ class Renderer {
   drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH) {
     this.ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
   }
-  
-  drawRect(x,y,w,h, color, thickness) {
+
+  drawRect(x, y, w, h, color, thickness) {
     this.ctx.beginPath();
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = thickness;
     this.ctx.rect(x, y, w, h);
     this.ctx.stroke();
   }
-  
-  drawDot(x,y, color) {
+
+  drawDot(x, y, color) {
     const size = 20;
     this.ctx.beginPath();
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(x-size/2,y-size/2,size,size);
+    this.ctx.fillRect(
+      x - size / 2,
+      y - size / 2,
+      size,
+      size
+    );
     this.ctx.stroke();
   }
 }
-
-window.addEventListener('resize', () => {
-  fitCanvasToWindow();
-});
 
 let secondsPassed;
 let oldTimeStamp = 0.0;

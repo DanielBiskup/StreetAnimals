@@ -1,8 +1,11 @@
 # Street Animals
+
 a simple 2D shoot 'em up in HTML and JavaScript
 
+# [v0.1-alpha](https://github.com/DanielBiskup/StreetAnimals/tree/v0.1-alpha)
 
-## [v0.1-alpha](https://github.com/DanielBiskup/StreetAnimals/tree/v0.1-alpha) Anchor placement
+## Anchor placement
+
 What I mean by anchor is the (x,y)-position of an object
 on the screen. Objects usually have some form of image and
 a hitbox which we can use to detect collisions with
@@ -30,25 +33,43 @@ it at the origin or the image, and placing it in the center
 of the objects hitbox.
 
 ### Anchor at the origin of the image
+
 In the following image we have:
-* Green filled Square: The anchor position of the object.
-* Cyan filled square: The origin of the image being drawn.
-* Cyan Border: The border of the image being drawn.
-* Red filled square: The origin of the objects hitbox.
-* Red Border: The border of the objects hitbox.
+
+- Green filled Square: The anchor position of the object.
+- Cyan filled square: The origin of the image being drawn.
+- Cyan Border: The border of the image being drawn.
+- Red filled square: The origin of the objects hitbox.
+- Red Border: The border of the objects hitbox.
 
 ![anchor at image origin](./readme-images/ScalingWithAnchorAtImageOrigin.gif)
-Here we set the anchor (green) to be the  (x,y)-position of the image origin and 
+Here we set the anchor (green) to be the (x,y)-position of the image origin and
 calculate everything else relative to it.
 
 As you can see, this choice pushes the dog further and further
 away with increasing scale. This is not desirable.
 
 ### Anchor in the center of the hitbox
+
 ![anchor at hitbox center](./readme-images/ScalingWithAnchorInCenter.gif)
 
 Here we set the anchor (green) to be the (x,y)-position of the center
-of the hitbox. Both the hitbox origin The images origin is calculated 
+of the hitbox. Both the hitbox origin The images origin is calculated
 based on that position.
 
 This seems more intuitive and useful to me.
+
+## Letterboxing
+
+To deal with screens of different resolutions I decided to
+follow the [Letterboxing](<https://en.wikipedia.org/wiki/Letterboxing_(filming)>)
+approach which is common in film.
+
+The idea is that I'm always drawing to a canvas of a Full-HD
+resolution of 1920 x 1080 pixels.
+
+Depending on the available space in the window I will shrink
+the canvas to fit the browser window, keeping it as large as
+possible while preserving the aspect ratio of 16:9.
+
+![Letterboxing](./readme-images/Letterboxing.gif)
