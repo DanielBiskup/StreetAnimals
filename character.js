@@ -35,52 +35,43 @@ class Oscillator {
 class Character {
   constructor(canvas, renderer) {
     this.renderer = renderer;
-
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
+    this.scale = 5.0;
+    this.speed_pps = 100.0 + 100.0 * Math.random(); // speed in pixels per second
+    this.action = 'walk';
 
-    this.scale = 1.0;
-    // Dynamically change the scale for demonstration
-    // purposes:
-    const minScale = 1.0;
-    const maxScale = 10.0;
-    const scaleChangePerSecond = 5.0;
-    this.oscillator = new Oscillator(
-      minScale,
-      maxScale,
-      scaleChangePerSecond,
-      () => this.scale,
-      (v) => {
-        this.scale = v;
-      }
-    );
+    (() => {
+      const minScale = 1.0;
+      const maxScale = 10.0;
+      const scaleChangePerSecond = 5.0;
+      this.scaleOscillator = new Oscillator(
+        minScale,
+        maxScale,
+        scaleChangePerSecond,
+        () => this.scale,
+        (v) => {
+          this.scale = v;
+        }
+      );
+    })();
 
-    // speed in pixels per second
-    this.speed_pps = 100.0 + 100.0 * Math.random();
-    const characterActions = ['walk'];
-    this.action =
-      characterActions[
-        Math.floor(Math.random() * characterActions.length)
-      ];
     this.animatedSprite = new AnimatedSprite(
       images.player,
       animationData,
       renderer
     );
+
     this.animatedSprite.startAnimation(this.action);
     this.originalWidth = this.animatedSprite.frameWidth;
     this.originalHeight = this.animatedSprite.frameHeight;
     this.hitboxHeight = this.originalHeight;
     this.hitboxWidth = this.originalWidth;
+    this.hitboxX = this.x;
+    this.hitboxY = this.y;
   }
 
-  draw() {
-    // The animated sprite and its origin:
-    this.animatedSprite.draw(
-      this.spriteX,
-      this.spriteY,
-      this.scale
-    );
+  #debug_draw() {
     this.renderer.drawRect(
       this.spriteX,
       this.spriteY,
@@ -89,6 +80,7 @@ class Character {
       'cyan',
       12
     );
+
     this.renderer.drawDot(
       this.spriteX,
       this.spriteY,
@@ -113,11 +105,21 @@ class Character {
     // Anchor position:
     this.renderer.drawDot(this.x, this.y, 'lime');
   }
+  draw() {
+    // The animated sprite and its origin:
+    this.animatedSprite.draw(
+      this.spriteX,
+      this.spriteY,
+      this.scale
+    );
+
+    this.#debug_draw();
+  }
 
   update(dtsec) {
     // Update Components:
     this.animatedSprite.update(dtsec);
-    this.oscillator.update(dtsec);
+    // this.scaleOscillator.update(dtsec);
 
     // The hitbox values are relative to the orignal
     // unscaled width and height of the hitbox.
@@ -136,30 +138,13 @@ class Character {
     this.hitboxHeight =
       this.originalHeight * relHitboxHeight * this.scale;
 
-    let anchor;
-    anchor = 'center-of-bounding-box';
-    // here (this.x, this.y) is taken to be the center of
-    // the bounding box.
+    this.hitboxX = this.x - 0.5 * this.hitboxWidth;
+    this.hitboxY = this.y - 0.5 * this.hitboxHeight;
 
-    // anchor = "top-left-corner-of-sprite";
-    // for this option the this.x and this.y will get removed
-    // further and further from the hitbox and the sprite
-    // the more we increase the scale factor. This is why
-    // I prefer "center-of-bounding-box"
-    if (anchor === 'top-left-corner-of-sprite') {
-      this.hitboxX =
-        this.x + this.hitboxWidth * relHitboxOffsetX;
-      this.hitboxY =
-        this.y + this.hitboxHeight * relHitboxOffsetY;
-      this.spriteX = this.x;
-      this.spriteY = this.y;
-    } else if (anchor === 'center-of-bounding-box') {
-      this.hitboxX = this.x - 0.5 * this.hitboxWidth;
-      this.hitboxY = this.y - 0.5 * this.hitboxHeight;
-      this.spriteX = this.hitboxX;
-      this.spriteY =
-        this.hitboxY - this.hitboxHeight * relHitboxOffsetY;
-    }
+    this.spriteX =
+      this.hitboxX - this.hitboxWidth * relHitboxOffsetX;
+    this.spriteY =
+      this.hitboxY - this.hitboxHeight * relHitboxOffsetY;
 
     // Logic:
     if (this.action === 'walk') {
