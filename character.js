@@ -32,6 +32,52 @@ class Oscillator {
   }
 }
 
+class Hitbox {
+  constructor(
+    relWidth,
+    relHeight,
+    originalOffsetX,
+    originalOffsetY,
+    scale,
+    getCenterX,
+    getCenterY
+  ) {
+    this.x = 0;
+    this.y = 0;
+    this.scale = scale;
+    this.getCenterX = getCenterX;
+    this.getCenterY = getCenterY;
+    this.originalOffsetX = originalOffsetX;
+    this.originalOffsetY = originalOffsetY;
+
+    // The hitbox dimensions and offset are given relative
+    // in the coordinate frame of the original sprite image.
+    //
+    // The hitbox offset helps in cases where for example
+    // only the lower half of the image is take up by
+    // a characters drawing. We don't want a hitbox that is
+    // twice as high the character.
+    this.hitboxWidthInSource = relWidth;
+    this.hitboxHeightInSource = relHeight;
+    this.update();
+  }
+  update() {
+    this.hitboxWidth =
+      this.hitboxWidthInSource * this.scale();
+    this.hitboxHeight =
+      this.hitboxHeightInSource * this.scale();
+
+    // Not sure if those two lines belong here or somewhere else
+    this.hitboxOffsetX =
+      this.originalOffsetX * this.scale();
+    this.hitboxOffsetY =
+      this.originalOffsetY * this.scale();
+
+    this.x = this.getCenterX() - 0.5 * this.hitboxWidth;
+    this.y = this.getCenterY() - 0.5 * this.hitboxHeight;
+  }
+}
+
 class Character {
   constructor(canvas, renderer) {
     this.renderer = renderer;
@@ -61,17 +107,23 @@ class Character {
       animationData,
       renderer
     );
-
     this.animatedSprite.startAnimation(this.action);
+
     this.originalWidth = this.animatedSprite.frameWidth;
     this.originalHeight = this.animatedSprite.frameHeight;
-    this.hitboxHeight = this.originalHeight;
-    this.hitboxWidth = this.originalWidth;
-    this.hitboxX = this.x;
-    this.hitboxY = this.y;
+
+    this.hitbox = new Hitbox(
+      1.0 * this.originalWidth,
+      0.6 * this.originalHeight,
+      0 * this.originalWidth,
+      0.4 * this.originalHeight,
+      () => this.scale,
+      () => this.x,
+      () => this.y
+    );
   }
 
-  #debug_draw() {
+  debug_draw() {
     this.renderer.drawRect(
       this.spriteX,
       this.spriteY,
@@ -89,16 +141,16 @@ class Character {
 
     // Hitbox and its origin:
     this.renderer.drawRect(
-      this.hitboxX,
-      this.hitboxY,
-      this.hitboxWidth,
-      this.hitboxHeight,
+      this.hitbox.x,
+      this.hitbox.y,
+      this.hitbox.hitboxWidth,
+      this.hitbox.hitboxHeight,
       'red',
       6
     );
     this.renderer.drawDot(
-      this.hitboxX,
-      this.hitboxY,
+      this.hitbox.x,
+      this.hitbox.y,
       'red'
     );
 
@@ -113,45 +165,27 @@ class Character {
       this.scale
     );
 
-    this.#debug_draw();
+    this.debug_draw();
   }
 
   update(dtsec) {
     // Update Components:
-    this.animatedSprite.update(dtsec);
-    // this.scaleOscillator.update(dtsec);
-
-    // The hitbox values are relative to the orignal
-    // unscaled width and height of the hitbox.
-    // The hitbox offset helps in cases where for example
-    // only the lower half of the image is take up by
-    // a characters drawing. We don't want a hitbox that is
-    // twice as high the character.
-    // All four values are ecpected to be between 0.0 and 1.0.
-    const relHitboxWidth = 1.0;
-    const relHitboxHeight = 0.6;
-    const relHitboxOffsetX = 0.0;
-    const relHitboxOffsetY = 0.65;
-
-    this.hitboxWidth =
-      this.originalWidth * relHitboxWidth * this.scale;
-    this.hitboxHeight =
-      this.originalHeight * relHitboxHeight * this.scale;
-
-    this.hitboxX = this.x - 0.5 * this.hitboxWidth;
-    this.hitboxY = this.y - 0.5 * this.hitboxHeight;
+    true && this.animatedSprite.update(dtsec);
+    true && this.scaleOscillator.update(dtsec);
+    true && this.hitbox.update();
 
     this.spriteX =
-      this.hitboxX - this.hitboxWidth * relHitboxOffsetX;
+      this.hitbox.x - this.hitbox.hitboxOffsetX;
     this.spriteY =
-      this.hitboxY - this.hitboxHeight * relHitboxOffsetY;
+      this.hitbox.y - this.hitbox.hitboxOffsetY;
 
     // Logic:
     if (this.action === 'walk') {
       if (this.x > canvas.width) {
-        this.x = 0 - this.hitboxWidth;
+        this.x = 0 - this.hitbox.hitboxWidth;
         this.y =
-          Math.random() * canvas.height - this.hitboxHeight;
+          Math.random() * canvas.height -
+          this.hitbox.hitboxHeight;
       } else {
         this.x += this.speed_pps * dtsec;
       }
