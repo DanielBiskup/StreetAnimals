@@ -1,16 +1,63 @@
+class Oscillator {
+  constructor(
+    min,
+    max,
+    changePerSecond,
+    getValue,
+    setValue
+  ) {
+    this.scalingUp = true;
+    this.minScale = min;
+    this.maxScale = max;
+    this.changePerSecond = changePerSecond;
+    this.getValue = getValue;
+    this.setValue = setValue;
+  }
+  update(dtsec) {
+    let old_scale = this.getValue();
+    let new_scale;
+
+    if (this.scalingUp) {
+      new_scale = old_scale + this.changePerSecond * dtsec;
+      if (new_scale >= this.maxScale) {
+        this.scalingUp = false;
+      }
+    } else {
+      new_scale = old_scale - this.changePerSecond * dtsec;
+      if (new_scale <= this.minScale) {
+        this.scalingUp = true;
+      }
+    }
+    this.setValue(new_scale);
+  }
+}
+
 class Character {
   constructor(canvas, renderer) {
-    this.renderer = renderer; 
+    this.renderer = renderer;
 
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    
+
     this.scale = 1.0;
-    this.scalingUp = true;
+    // Dynamically change the scale for demonstration
+    // purposes:
+    const minScale = 1.0;
+    const maxScale = 10.0;
+    const scaleChangePerSecond = 5.0;
+    this.oscillator = new Oscillator(
+      minScale,
+      maxScale,
+      scaleChangePerSecond,
+      () => this.scale,
+      (v) => {
+        this.scale = v;
+      }
+    );
 
     // speed in pixels per second
     this.speed_pps = 100.0 + 100.0 * Math.random();
-    const characterActions = ['walk']
+    const characterActions = ['walk'];
     this.action =
       characterActions[
         Math.floor(Math.random() * characterActions.length)
@@ -29,15 +76,24 @@ class Character {
 
   draw() {
     // The animated sprite and its origin:
-    this.animatedSprite.draw(this.spriteX, this.spriteY, this.scale);
+    this.animatedSprite.draw(
+      this.spriteX,
+      this.spriteY,
+      this.scale
+    );
     this.renderer.drawRect(
       this.spriteX,
       this.spriteY,
       this.animatedSprite.frameWidth * this.scale,
       this.animatedSprite.frameHeight * this.scale,
       'cyan',
-      12)
-    this.renderer.drawDot(this.spriteX, this.spriteY, 'cyan')
+      12
+    );
+    this.renderer.drawDot(
+      this.spriteX,
+      this.spriteY,
+      'cyan'
+    );
 
     // Hitbox and its origin:
     this.renderer.drawRect(
@@ -46,34 +102,22 @@ class Character {
       this.hitboxWidth,
       this.hitboxHeight,
       'red',
-      6);
-    this.renderer.drawDot(this.hitboxX, this.hitboxY, 'red');
-    
+      6
+    );
+    this.renderer.drawDot(
+      this.hitboxX,
+      this.hitboxY,
+      'red'
+    );
+
     // Anchor position:
-    this.renderer.drawDot(this.x, this.y, 'lime')
+    this.renderer.drawDot(this.x, this.y, 'lime');
   }
 
   update(dtsec) {
     // Update Components:
     this.animatedSprite.update(dtsec);
-
-    // Dynamically change the scale for demonstration
-    // purposes:
-    const maxScale = 10.0;
-    const minScale = 1.0;
-    const scaleChangePerSecond = 5.0;
-
-    if (this.scalingUp) {
-      this.scale = this.scale + scaleChangePerSecond * dtsec;
-      if (this.scale >= maxScale) {
-        this.scalingUp = false;
-      }
-    } else {
-      this.scale = this.scale - scaleChangePerSecond * dtsec;
-      if (this.scale <= minScale) {
-        this.scalingUp = true;
-      }
-    }
+    this.oscillator.update(dtsec);
 
     // The hitbox values are relative to the orignal
     // unscaled width and height of the hitbox.
@@ -87,11 +131,13 @@ class Character {
     const relHitboxOffsetX = 0.0;
     const relHitboxOffsetY = 0.65;
 
-    this.hitboxWidth = this.originalWidth * relHitboxWidth * this.scale;
-    this.hitboxHeight = this.originalHeight * relHitboxHeight * this.scale;
-  
+    this.hitboxWidth =
+      this.originalWidth * relHitboxWidth * this.scale;
+    this.hitboxHeight =
+      this.originalHeight * relHitboxHeight * this.scale;
+
     let anchor;
-    anchor = "center-of-bounding-box";
+    anchor = 'center-of-bounding-box';
     // here (this.x, this.y) is taken to be the center of
     // the bounding box.
 
@@ -100,16 +146,19 @@ class Character {
     // further and further from the hitbox and the sprite
     // the more we increase the scale factor. This is why
     // I prefer "center-of-bounding-box"
-    if (anchor === "top-left-corner-of-sprite") {
-    this.hitboxX = this.x + (this.hitboxWidth * relHitboxOffsetX);
-    this.hitboxY = this.y + (this.hitboxHeight * relHitboxOffsetY);
-    this.spriteX = this.x;
-    this.spriteY = this.y;
+    if (anchor === 'top-left-corner-of-sprite') {
+      this.hitboxX =
+        this.x + this.hitboxWidth * relHitboxOffsetX;
+      this.hitboxY =
+        this.y + this.hitboxHeight * relHitboxOffsetY;
+      this.spriteX = this.x;
+      this.spriteY = this.y;
     } else if (anchor === 'center-of-bounding-box') {
-    this.hitboxX = (this.x - 0.5 * this.hitboxWidth);
-    this.hitboxY = (this.y - 0.5 * this.hitboxHeight);
-    this.spriteX = this.hitboxX;
-    this.spriteY = this.hitboxY - this.hitboxHeight * relHitboxOffsetY;
+      this.hitboxX = this.x - 0.5 * this.hitboxWidth;
+      this.hitboxY = this.y - 0.5 * this.hitboxHeight;
+      this.spriteX = this.hitboxX;
+      this.spriteY =
+        this.hitboxY - this.hitboxHeight * relHitboxOffsetY;
     }
 
     // Logic:
@@ -122,5 +171,5 @@ class Character {
         this.x += this.speed_pps * dtsec;
       }
     }
- }
+  }
 }
